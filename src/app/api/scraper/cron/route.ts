@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
+
+// Force Node.js runtime for scraper operations
+export const runtime = "nodejs";
 
 // Interface untuk cron control response
 interface CronControlResponse {
@@ -18,60 +20,44 @@ export async function POST(request: NextRequest) {
     console.log(`🎮 API Cron Control: ${action}`);
 
     if (action === "run-now") {
-      // Call scraper via standalone script
+      // Run scraper directly using dynamic import (serverless compatible)
       try {
-        const { spawn } = await import("child_process");
+        console.log("🔄 Starting scraping via dynamic import...");
 
-        const scriptPath = path.join(process.cwd(), "scripts", "run-scraper.js");
-        const child = spawn("node", [scriptPath], {
-          cwd: process.cwd(),
-          stdio: ["pipe", "pipe", "pipe"],
-        });
+        // Import scraper directly
+        const { runAllScrapers } = await import("../../../lib/scraper/index");
 
-        let stdout = "";
-        let stderr = "";
+        console.log("🔄 Executing runAllScrapers...");
+        const result = await runAllScrapers();
 
-        child.stdout.on("data", (data) => {
-          stdout += data.toString();
-        });
+        console.log("✅ Scraping completed successfully");
 
-        child.stderr.on("data", (data) => {
-          stderr += data.toString();
-        });
+        return NextResponse.json(
+          {
+            success: true,
+            message: "Manual scraping completed successfully",
+            data: {
+              result: result,
+              timestamp: new Date().toISOString(),
+              action: "run-now",
+            },
+          },
+          { status: 200 }
+        );
+      } catch (scraperError) {
+        console.error("❌ Scraper execution failed:", scraperError);
 
-        const exitCode = await new Promise((resolve) => {
-          child.on("close", resolve);
-        });
+        const errorResponse: CronControlResponse = {
+          success: false,
+          message: "Scraping failed",
+          error: scraperError instanceof Error ? scraperError.message : "Unknown error",
+          data: {
+            timestamp: new Date().toISOString(),
+            action: "run-now",
+          },
+        };
 
-        if (exitCode === 0) {
-          try {
-            // Try to parse JSON result
-            const result = JSON.parse(stdout.trim());
-            return NextResponse.json(
-              {
-                success: true,
-                message: "Manual scraping completed successfully",
-                data: result,
-              },
-              { status: 200 }
-            );
-          } catch (parseError) {
-            // If not JSON, return success with output
-            return NextResponse.json(
-              {
-                success: true,
-                message: "Manual scraping completed successfully",
-                data: { output: stdout.trim(), stderr: stderr.trim() },
-              },
-              { status: 200 }
-            );
-          }
-        } else {
-          throw new Error(stderr || "Scraper execution failed");
-        }
-      } catch (error) {
-        console.error("❌ Manual scraping failed:", error);
-        throw new Error("Failed to execute scraper: " + (error instanceof Error ? error.message : "Unknown error"));
+        return NextResponse.json(errorResponse, { status: 500 });
       }
     }
 
