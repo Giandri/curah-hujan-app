@@ -1,0 +1,112 @@
+{
+  "timestamp": "2026-01-19T04:00:00.020Z",
+  "total_records": 8,
+  "source_url": "https://hkababel.higertech.com/Home/TabelMonitoring",
+  "last_updated": "2026-01-19T04:00:00.020Z",
+  "data": [
+    {
+      "NO.": "1",
+      "NAMA POS": "PDA AIR DAENG",
+      "ID LOGGER": "HGT220",
+      "LOKASI": "Kab. Bangka Barat, Kec. Mentok, Sungai Daeng",
+      "WS": "Bangka",
+      "DAS": "Das Mentok",
+      "TANGGAL": "25 November 2025",
+      "JAM (WIB)": "09:51",
+      "TMA": "0.82 m",
+      "DEBIT (m3/s)": "-",
+      "BATERAI (volt)": "12"
+    },
+    {
+      "NO.": "2",
+      "NAMA POS": "PDA BENDUNG METUKUL",
+      "ID LOGGER": "HGT637",
+      "LOKASI": "Kab. Bangka Selatan, Kec. Toboali, Rias",
+      "WS": "Bangka",
+      "DAS": "Das Bikang",
+      "TANGGAL": "19 Januari 2026",
+      "JAM (WIB)": "10:55",
+      "TMA": "3.4 m",
+      "DEBIT (m3/s)": "-",
+      "BATERAI (volt)": "13.08"
+    },
+    {
+      "NO.": "3",
+      "NAMA POS": "PDA KACE",
+      "ID LOGGER": "HGT1066",
+      "LOKASI": "Kab. Bangka, Kec. Mendo Barat, Kace Timur",
+      "WS": "Bangka",
+      "DAS": "-",
+      "TANGGAL": "19 Januari 2026",
+      "JAM (WIB)": "10:55",
+      "TMA": "0.63 m",
+      "DEBIT (m3/s)": "-",
+      "BATERAI (volt)": "14.58"
+    },
+    {
+      "NO.": "4",
+      "NAMA POS": "PDA PEDINDANG",
+      "ID LOGGER": "HGT177",
+      "LOKASI": "Kota Pangkal Pinang, Kec. Rangkui, Parit Lalang",
+      "WS": "Bangka",
+      "DAS": "Das Baturusa",
+      "TANGGAL": "1 Desember 2025",
+      "JAM (WIB)": "14:17",
+      "TMA": "1.07 m",
+      "DEBIT (m3/s)": "-",
+      "BATERAI (volt)": "12"
+    },
+    {
+      "NO.": "5",
+      "NAMA POS": "PDA SUNGAI SELAN",
+      "ID LOGGER": "HGT646",
+      "LOKASI": "Kab. Bangka Tengah, Kec. Sungai Selan, Lampur",
+      "WS": "Bangka",
+      "DAS": "Das Selan",
+      "TANGGAL": "19 Januari 2026",
+      "JAM (WIB)": "10:55",
+      "TMA": "0.43 m",
+      "DEBIT (m3/s)": "-",
+      "BATERAI (volt)": "13.42"
+    },
+    {
+      "NO.": "6",
+      "NAMA POS": "PDA BENDUNG PICE BESAR",
+      "ID LOGGER": "HGT181",
+      "LOKASI": "Kab. Belitung Timur, Kec. Gantung, Lenggang",
+      "WS": "Belitung",
+      "DAS": "Das Manggar",
+      "TANGGAL": "16 Desember 2025",
+      "JAM (WIB)": "09:23",
+      "TMA": "4.04 m",
+      "DEBIT (m3/s)": "-",
+      "BATERAI (volt)": "12"
+    },
+    {
+      "NO.": "7",
+      "NAMA POS": "PDA KELUBI",
+      "ID LOGGER": "HGT138",
+      "LOKASI": "Kab. Belitung Timur, Kec. Manggar, Kelubi",
+      "WS": "Belitung",
+      "DAS": "Das Kampit",
+      "TANGGAL": "-",
+      "JAM (WIB)": "-",
+      "TMA": "-",
+      "DEBIT (m3/s)": "-",
+      "BATERAI (volt)": ""
+    },
+    {
+      "NO.": "8",
+      "NAMA POS": "PDA SUNGAI AIR RAYA",
+      "ID LOGGER": "HGT221",
+      "LOKASI": "Kab. Belitung, Kec. Tanjung Pandan, Perawas",
+      "WS": "Belitung",
+      "DAS": "Das Cecuruk",
+      "TANGGAL": "22 Januari 2025",
+      "JAM (WIB)": "01:40",
+      "TMA": "2.1 m",
+      "DEBIT (m3/s)": "-",
+      "BATERAI (volt)": "12"
+    }
+  ]
+}

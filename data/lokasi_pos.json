@@ -1,0 +1,189 @@
+{
+  "totalStations": 26,
+  "stationsWithCoordinates": 0,
+  "data": [
+    {
+      "namaPos": "PDA AIR DAENG",
+      "jenisPos": "PDA",
+      "koordinat": "-2.0327841053780658, 105.17041498348578",
+      "latitude": "-2.0327841053780658",
+      "longitude": "105.17041498348578"
+    },
+    {
+      "namaPos": "PDA BENDUNG METUKUL",
+      "jenisPos": "PDA",
+      "koordinat": "-2.9274355, 106.3868663",
+      "latitude": "-2.9274355",
+      "longitude": "106.3868663"
+    },
+    {
+      "namaPos": "PDA KACE",
+      "jenisPos": "PDA",
+      "koordinat": "",
+      "latitude": "",
+      "longitude": ""
+    },
+    {
+      "namaPos": "PDA PEDINDANG",
+      "jenisPos": "PDA",
+      "koordinat": "-2.151084, 106.102157",
+      "latitude": "-2.151084",
+      "longitude": "106.102157"
+    },
+    {
+      "namaPos": "PDA SUNGAI SELAN",
+      "jenisPos": "PDA",
+      "koordinat": "-2.376158, 106.054034",
+      "latitude": "-2.376158",
+      "longitude": "106.054034"
+    },
+    {
+      "namaPos": "PDA BENDUNG PICE BESAR",
+      "jenisPos": "PDA",
+      "koordinat": "-2.959072, 108.164757",
+      "latitude": "-2.959072",
+      "longitude": "108.164757"
+    },
+    {
+      "namaPos": "PDA KELUBI",
+      "jenisPos": "PDA",
+      "koordinat": "-2.83606938, 108.14638889",
+      "latitude": "-2.83606938",
+      "longitude": "108.14638889"
+    },
+    {
+      "namaPos": "PDA SUNGAI AIR RAYA",
+      "jenisPos": "PDA",
+      "koordinat": "-2.0647249248334734, 105.17781777446504",
+      "latitude": "-2.0647249248334734",
+      "longitude": "105.17781777446504"
+    },
+    {
+      "namaPos": "PCH BENDUNG MENTUKUL",
+      "jenisPos": "PCH",
+      "koordinat": "-2.912271, 106.40957",
+      "latitude": "-2.912271",
+      "longitude": "106.40957"
+    },
+    {
+      "namaPos": "PCH KOBA",
+      "jenisPos": "PCH",
+      "koordinat": "-2.518236, 106.42088",
+      "latitude": "-2.518236",
+      "longitude": "106.42088"
+    },
+    {
+      "namaPos": "PCH MAPUR",
+      "jenisPos": "PCH",
+      "koordinat": "-1.6841667, 105.9877778",
+      "latitude": "-1.6841667",
+      "longitude": "105.9877778"
+    },
+    {
+      "namaPos": "PCH MENTOK",
+      "jenisPos": "PCH",
+      "koordinat": "-2.058389, 105.203737",
+      "latitude": "-2.058389",
+      "longitude": "105.203737"
+    },
+    {
+      "namaPos": "PCH PANGKALPINANG",
+      "jenisPos": "PCH",
+      "koordinat": "-2.1361111, 106.0847222",
+      "latitude": "-2.1361111",
+      "longitude": "106.0847222"
+    },
+    {
+      "namaPos": "PCH PAYUNG",
+      "jenisPos": "PCH",
+      "koordinat": "-2.603774, 106.137113",
+      "latitude": "-2.603774",
+      "longitude": "106.137113"
+    },
+    {
+      "namaPos": "PCH SUNGAI LIAT",
+      "jenisPos": "PCH",
+      "koordinat": "-1.863171, 106.102375",
+      "latitude": "-1.863171",
+      "longitude": "106.102375"
+    },
+    {
+      "namaPos": "PCH TANJUNG NIUR",
+      "jenisPos": "PCH",
+      "koordinat": "-2.0208333, 105.6130556",
+      "latitude": "-2.0208333",
+      "longitude": "105.6130556"
+    },
+    {
+      "namaPos": "PCH TELAK",
+      "jenisPos": "PCH",
+      "koordinat": "-1.6777778, 105.5766667",
+      "latitude": "-1.6777778",
+      "longitude": "105.5766667"
+    },
+    {
+      "namaPos": "PCH TEPUS",
+      "jenisPos": "PCH",
+      "koordinat": "-2.7127778, 106.50361111",
+      "latitude": "-2.7127778",
+      "longitude": "106.50361111"
+    },
+    {
+      "namaPos": "PCH BADAU",
+      "jenisPos": "PCH",
+      "koordinat": "-2.817029, 107.796064",
+      "latitude": "-2.817029",
+      "longitude": "107.796064"
+    },
+    {
+      "namaPos": "PCH BENDUNG PICE BESAR",
+      "jenisPos": "PCH",
+      "koordinat": "-2.959072, 108.164757",
+      "latitude": "-2.959072",
+      "longitude": "108.164757"
+    },
+    {
+      "namaPos": "PCH MENGKUBANG",
+      "jenisPos": "PCH",
+      "koordinat": "-2.785946, 108.209492",
+      "latitude": "-2.785946",
+      "longitude": "108.209492"
+    },
+    {
+      "namaPos": "KLIMATOLOGI BENDUNG METUKUL",
+      "jenisPos": "KLIMATOLOGI",
+      "koordinat": "",
+      "latitude": "",
+      "longitude": ""
+    },
+    {
+      "namaPos": "KLIMATOLOGI KOBA",
+      "jenisPos": "KLIMATOLOGI",
+      "koordinat": "-2.518236, 106.42088",
+      "latitude": "-2.518236",
+      "longitude": "106.42088"
+    },
+    {
+      "namaPos": "KLIMATOLOGI MENTOK",
+      "jenisPos": "KLIMATOLOGI",
+      "koordinat": "-2.058388, 105.20373",
+      "latitude": "-2.058388",
+      "longitude": "105.20373"
+    },
+    {
+      "namaPos": "KLIMATOLOGI BENDUNG PICE BESAR",
+      "jenisPos": "KLIMATOLOGI",
+      "koordinat": "-2.959072, 108.164757",
+      "latitude": "-2.959072",
+      "longitude": "108.164757"
+    },
+    {
+      "namaPos": "KLIMATOLOGI SUNGAILIAT",
+      "jenisPos": "KLIMATOLOGI",
+      "koordinat": "",
+      "latitude": "",
+      "longitude": ""
+    }
+  ],
+  "lastFixTimestamp": "2026-01-15T08:20:03.634Z"
+}
