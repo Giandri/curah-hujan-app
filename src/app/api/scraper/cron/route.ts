@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
         console.log("🔄 Starting scraping via dynamic import...");
 
         // Import scraper directly
-        const { runAllScrapers } = await import("../../../lib/scraper/index");
+        const { runAllScrapers } = await import("@/lib/scraper/index");
 
         console.log("🔄 Executing runAllScrapers...");
         const result = await runAllScrapers();

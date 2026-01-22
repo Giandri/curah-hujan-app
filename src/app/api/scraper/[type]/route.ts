@@ -39,8 +39,10 @@ function readScraperFile(filename: string): ScraperData | null {
 
 // GET /api/scraper/[type] - Mengambil data spesifik berdasarkan type
 export async function GET(request: NextRequest, { params }: { params: Promise<{ type: string }> }) {
+  let type: string = "";
   try {
-    const { type } = await params;
+    const paramsData = await params;
+    type = paramsData.type;
     console.log(`📡 API Scraper [${type}]: Mengambil data...`);
 
     let filename: string;
