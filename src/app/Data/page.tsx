@@ -37,10 +37,10 @@ const summaryData = [
 interface DataRow {
   id: number;
   namaPos: string;
-  idLogger: string;
-  lokasi: string;
-  ws: string;
-  das: string;
+  idLogger?: string;
+  lokasi?: string;
+  ws?: string;
+  das?: string;
   tanggal: string;
   jam: string;
   baterai: string;
@@ -61,6 +61,16 @@ interface DataRow {
   status?: string;
   statusColor?: string;
   time?: string;
+  // Klimatologi-specific fields
+  kelembapan?: string;
+  kelembapanStatus?: string;
+  curahHujanPer5Menit?: string;
+  curahHujan1JamTerakhir?: string;
+  curahHujanStatus?: string;
+  tekanan?: string;
+  radiasiMatahari?: string;
+  lamaPenyinaran?: string;
+  suhu?: string;
 }
 
 const getStatusColor = (status: string) => {
@@ -124,47 +134,47 @@ function useScraperDataForTables() {
   const posDugaAirData =
     dugaAirQuery.records.length > 0
       ? formatPosDugaAirData(dugaAirQuery.records).map((item) => ({
-          ...item,
-          status: item.tma === "-" ? "Tanpa Status" : "Normal",
-          statusColor: getStatusColor(item.tma === "-" ? "Tanpa Status" : "Normal"),
-        }))
+        ...item,
+        status: item.tma === "-" ? "Tanpa Status" : "Normal",
+        statusColor: getStatusColor(item.tma === "-" ? "Tanpa Status" : "Normal"),
+      }))
       : [];
 
   // Format data POS Curah Hujan
   const posCurahHujanData =
     curahHujanQuery.records.length > 0
       ? formatPosCurahHujanData(curahHujanQuery.records).map((item) => {
-          const status =
-            item.jamTerakhir?.ch === "0"
-              ? "Tidak Hujan"
-              : parseFloat(item.jamTerakhir?.ch || "0") >= 20
+        const status =
+          item.jamTerakhir?.ch === "0"
+            ? "Tidak Hujan"
+            : parseFloat(item.jamTerakhir?.ch || "0") >= 20
               ? "Hujan Sangat Lebat"
               : parseFloat(item.jamTerakhir?.ch || "0") >= 10
-              ? "Hujan Lebat"
-              : parseFloat(item.jamTerakhir?.ch || "0") >= 5
-              ? "Hujan Sedang"
-              : "Hujan Ringan";
-          return { ...item, status, statusColor: getStatusColor(status) };
-        })
+                ? "Hujan Lebat"
+                : parseFloat(item.jamTerakhir?.ch || "0") >= 5
+                  ? "Hujan Sedang"
+                  : "Hujan Ringan";
+        return { ...item, status, statusColor: getStatusColor(status) };
+      })
       : [];
 
   const posKlimatologiData =
     klimatologiQuery.records.length > 0
       ? formatPosKlimatologiData(klimatologiQuery.records).map((item) => {
-          let status = "Normal";
-          const suhu = parseFloat(item.jamTerakhir?.ch || "0");
-          const kelembapan = parseFloat(item.akumulasiHari?.ch || "0");
+        let status = "Normal";
+        const suhu = parseFloat(item.jamTerakhir?.ch || "0");
+        const kelembapan = parseFloat(item.akumulasiHari?.ch || "0");
 
-          if (suhu > 35 || suhu < 15) status = "Peringatan Suhu";
-          else if (kelembapan < 30) status = "Udara Kering";
-          else if (kelembapan > 90) status = "Udara Lembab";
+        if (suhu > 35 || suhu < 15) status = "Peringatan Suhu";
+        else if (kelembapan < 30) status = "Udara Kering";
+        else if (kelembapan > 90) status = "Udara Lembab";
 
-          return {
-            ...item,
-            status,
-            statusColor: getStatusColor(status),
-          };
-        })
+        return {
+          ...item,
+          status,
+          statusColor: getStatusColor(status),
+        };
+      })
       : [];
 
   return {
@@ -212,9 +222,9 @@ const TableCard = React.memo(
     const isPosKlimatologi = data[0]?.namaPos?.toLowerCase().includes("klimatologi") || title.toLowerCase().includes("klimatologi");
 
     return (
-      <div className="bg-white dark:bg-gray-900/50 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-gray-900/50 rounded-2xl border border-[#FFD700] dark:border-gray-700 overflow-hidden shadow-sm">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+        <div className="px-6 py-4 border-b border-[#FFD700] dark:border-gray-700 bg-[#FFD700] dark:bg-gray-800/50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={`p-2 rounded-lg ${iconBgClass}`}>
@@ -222,11 +232,11 @@ const TableCard = React.memo(
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{data.length} lokasi aktif</p>
+                <p className="text-sm text-yellow-500 dark:text-gray-400">{data.length} lokasi aktif</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 transition-colors">
+              <button className="p-2 rounded-lg hover:bg-[#FFD700] dark:hover:bg-gray-700 text-yellow-600 dark:text-gray-400 transition-colors">
                 <LayoutGridIcon className="h-4 w-4" />
               </button>
               <button className="p-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-colors">
@@ -239,7 +249,7 @@ const TableCard = React.memo(
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-3 text-yellow-500 dark:text-gray-400">
               <RefreshCw className="h-5 w-5 animate-spin" />
               <span>Memuat data...</span>
             </div>
@@ -250,8 +260,8 @@ const TableCard = React.memo(
         {!loading && data.length === 0 && (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
-              <AlertCircle className="h-12 w-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-              <p className="text-gray-500 dark:text-gray-400">{emptyMessage}</p>
+              <AlertCircle className="h-12 w-12 text-gray-400 dark:text-yellow-500 mx-auto mb-4" />
+              <p className="text-yellow-500 dark:text-gray-400">{emptyMessage}</p>
             </div>
           </div>
         )}
@@ -261,179 +271,184 @@ const TableCard = React.memo(
           <>
             {isPosKlimatologi ? (
               /* Klimatologi Table with Custom Structure */
-              <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-                <table className="min-w-full text-sm">
-                  <thead className="bg-gray-50 dark:bg-gray-800/50">
+              <div className="overflow-x-auto rounded-lg border border-[#FFD700] dark:border-gray-700">
+                <table className="min-w-full text-sm border-collapse">
+                  <thead className="bg-[#FFD700] dark:bg-yellow-900/50">
                     <tr>
-                      <th rowSpan={2} className="px-3 py-2 border text-center">
+                      <th rowSpan={2} className="px-3 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-black dark:text-gray-200">
                         No
                       </th>
-                      <th rowSpan={2} className="px-4 py-2 border text-left whitespace-nowrap">
+                      <th rowSpan={2} className="px-4 py-2 border border-[#FFD700] dark:border-gray-700 text-left whitespace-nowrap text-black dark:text-gray-200">
                         Nama Pos
                       </th>
-                      <th rowSpan={2} className="px-3 py-2 border text-center">
+                      <th rowSpan={2} className="px-3 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-black dark:text-gray-200">
                         Tanggal
                       </th>
-                      <th rowSpan={2} className="px-3 py-2 border text-center">
+                      <th rowSpan={2} className="px-3 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-black dark:text-gray-200">
                         Jam
                       </th>
-                      <th rowSpan={2} className="px-4 py-2 border text-center">
+                      <th rowSpan={2} className="px-4 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-black dark:text-gray-200">
                         Kelembapan
                       </th>
-                      <th colSpan={2} className="px-4 py-2 border text-center">
+                      <th colSpan={2} className="px-4 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-black dark:text-gray-200">
                         Curah Hujan
                       </th>
-                      <th rowSpan={2} className="px-4 py-2 border text-center">
+                      <th rowSpan={2} className="px-4 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-black dark:text-gray-200">
                         Tekanan
-                        <div className="text-xs text-gray-500">(MB)</div>
+                        <div className="text-xs text-yellow-500">(MB)</div>
                       </th>
-                      <th colSpan={2} className="px-4 py-2 border text-center">
+                      <th colSpan={2} className="px-4 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-black dark:text-gray-200">
                         Radiasi Matahari
                       </th>
-                      <th rowSpan={2} className="px-4 py-2 border text-center">
+                      <th rowSpan={2} className="px-4 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-black dark:text-gray-200">
                         Suhu
-                        <div className="text-xs text-gray-500">(°C)</div>
+                        <div className="text-xs text-yellow-500">(°C)</div>
                       </th>
-                      <th rowSpan={2} className="px-4 py-2 border text-center">
+                      <th rowSpan={2} className="px-4 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-black dark:text-gray-200">
                         Arah Angin
                       </th>
-                      <th rowSpan={2} className="px-4 py-2 border text-center">
+                      <th rowSpan={2} className="px-4 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-black dark:text-gray-200">
                         Kecepatan Angin
-                        <div className="text-xs text-gray-500">(km/h)</div>
+                        <div className="text-xs text-yellow-500">(km/h)</div>
                       </th>
-                      <th rowSpan={2} className="px-4 py-2 border text-center">
+                      <th rowSpan={2} className="px-4 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-black dark:text-gray-200">
                         Penguapan
-                        <div className="text-xs text-gray-500">(mm)</div>
+                        <div className="text-xs text-yellow-500">(mm)</div>
                       </th>
-                      <th rowSpan={2} className="px-4 py-2 border text-center">
+                      <th rowSpan={2} className="px-4 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-black dark:text-gray-200">
                         Baterai
-                        <div className="text-xs text-gray-500">(Volt)</div>
+                        <div className="text-xs text-yellow-500">(Volt)</div>
                       </th>
                     </tr>
                     <tr>
-                      <th className="px-3 py-2 border text-center text-xs">Per 5 Menit</th>
-                      <th className="px-3 py-2 border text-center text-xs">1 Jam Terakhir</th>
-                      <th className="px-3 py-2 border text-center text-xs">W/m²</th>
-                      <th className="px-3 py-2 border text-center text-xs">Jam</th>
+                      <th className="px-3 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-xs text-black dark:text-gray-200">Per 5 Menit</th>
+                      <th className="px-3 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-xs text-black dark:text-gray-200">1 Jam Terakhir</th>
+                      <th className="px-3 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-xs text-black dark:text-gray-200">W/m²</th>
+                      <th className="px-3 py-2 border border-[#FFD700] dark:border-gray-700 text-center text-xs text-black dark:text-gray-200">Jam</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y">
+                  <tbody className="divide-y divide-[#FFD700] dark:divide-gray-700">
                     {data.map((row, idx) => (
-                      <tr key={row.id} className="group hover:bg-blue-50/50 dark:hover:bg-blue-500/5 transition-colors cursor-pointer">
-                        <td className="px-3 py-3 whitespace-nowrap">
-                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-700 text-xs font-medium text-gray-600 dark:text-gray-300">{(idx + 1).toString().padStart(2, "0")}</span>
+                      <tr key={row.id} className="group hover:bg-[#FFD700] dark:hover:bg-yellow-500/10 transition-colors cursor-pointer">
+                        {/* No. */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center border border-[#FFD700] dark:border-gray-700">
+                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#FFD700] dark:bg-gray-700 text-xs font-medium text-yellow-600 dark:text-gray-300">{(idx + 1).toString().padStart(2, "0")}</span>
                         </td>
-                        <td className="px-3 py-3 min-w-56">
+                        {/* Nama Pos */}
+                        <td className="px-3 py-3 min-w-48 border border-[#FFD700] dark:border-gray-700">
                           <div className="flex items-center gap-2">
                             <div className="shrink-0">
-                              <div className="h-8 w-8 rounded-full bg-linear-to-br from-blue-100 to-blue-200 dark:from-blue-800 dark:to-blue-700 flex items-center justify-center">
-                                <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                              <div className="h-8 w-8 rounded-full bg-linear-to-br from-orange-100 to-orange-200 dark:from-orange-800 dark:to-orange-700 flex items-center justify-center">
+                                <Thermometer className="h-4 w-4 text-orange-600 dark:text-orange-400" />
                               </div>
                             </div>
                             <div className="min-w-0 flex-1">
-                              <div className="text-sm font-semibold text-gray-900 dark:text-white" title={row.namaPos || row.location}>
-                                <div className="whitespace-normal wrap-break-word leading-tight">{row.namaPos || row.location}</div>
-                              </div>
-                              <div className="text-xs text-gray-500 dark:text-gray-400 font-mono">{row.idLogger}</div>
+                              <div className="text-sm font-semibold text-gray-900 dark:text-white whitespace-normal leading-tight">{row.namaPos}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-3 py-3 text-sm text-gray-900 dark:text-white font-medium min-w-32" title={row.lokasi}>
-                          <div className="whitespace-normal wrap-break-word leading-tight">{row.lokasi}</div>
+                        {/* Tanggal */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center text-sm text-yellow-600 dark:text-gray-300 border border-[#FFD700] dark:border-gray-700">
+                          {row.tanggal || "-"}
                         </td>
-                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-300 min-w-20" title={row.ws}>
-                          <div className="whitespace-normal wrap-break-word leading-tight">{row.ws}</div>
+                        {/* Jam */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center text-sm font-medium text-gray-900 dark:text-white border border-[#FFD700] dark:border-gray-700">
+                          {row.jam || "-"}
                         </td>
-                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-300 min-w-24" title={row.das}>
-                          <div className="whitespace-normal wrap-break-word leading-tight">{row.das}</div>
+                        {/* Kelembapan */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center border border-[#FFD700] dark:border-gray-700">
+                          <div className="text-sm font-bold text-gray-900 dark:text-white">{row.kelembapan || "-"}%</div>
+                          <div className="text-xs text-yellow-500 dark:text-gray-400">{row.kelembapanStatus || ""}</div>
                         </td>
-                        <td className="px-3 py-3 whitespace-nowrap text-xs text-gray-600 dark:text-gray-300 min-w-16">
-                          <div>{row.tanggal}</div>
-                          <div className="font-medium text-gray-900 dark:text-white">{row.jam}</div>
+                        {/* Curah Hujan Per 5 Menit */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center text-sm text-yellow-600 dark:text-gray-300 border border-[#FFD700] dark:border-gray-700">
+                          {row.curahHujanPer5Menit || "-"}
                         </td>
-                        {isPosDugaAir && (
-                          <>
-                            <td className="px-3 py-3 whitespace-nowrap text-center">
-                              <div className="flex items-baseline justify-center gap-1">
-                                <span className="text-sm font-bold text-gray-900 dark:text-white">{row.tma}</span>
-                                <span className="text-xs text-gray-500 dark:text-gray-400">m</span>
+                        {/* Curah Hujan 1 Jam Terakhir */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center border border-[#FFD700] dark:border-gray-700">
+                          <div className="text-sm font-bold text-gray-900 dark:text-white">{row.curahHujan1JamTerakhir || "-"} mm</div>
+                          <div className="text-xs text-yellow-500 dark:text-gray-400">{row.curahHujanStatus || ""}</div>
+                        </td>
+                        {/* Tekanan */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center text-sm text-yellow-600 dark:text-gray-300 border border-[#FFD700] dark:border-gray-700">
+                          {row.tekanan || "-"}
+                        </td>
+                        {/* Radiasi Matahari */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center text-sm text-yellow-600 dark:text-gray-300 border border-[#FFD700] dark:border-gray-700">
+                          {row.radiasiMatahari || "-"}
+                        </td>
+                        {/* Lama Penyinaran */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center text-sm text-yellow-600 dark:text-gray-300 border border-[#FFD700] dark:border-gray-700">
+                          {row.lamaPenyinaran || "-"}
+                        </td>
+                        {/* Suhu */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center border border-[#FFD700] dark:border-gray-700">
+                          <span className="text-sm font-bold text-gray-900 dark:text-white">{row.suhu || "-"}</span>
+                        </td>
+                        {/* Arah Angin with directional arrow */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center border border-[#FFD700] dark:border-gray-700">
+                          {(() => {
+                            const arah = row.arahAngin || "-";
+                            if (arah === "-") return <span className="text-sm text-gray-400">-</span>;
+
+                            // Extract direction text from "206° Barat Daya" format
+                            const dirMatch = arah.match(/(\d+)°?\s*(.*)/);
+                            const degrees = dirMatch ? parseInt(dirMatch[1]) : 0;
+                            const dirText = dirMatch ? dirMatch[2].trim() : "";
+
+                            // Map direction text to rotation angle (arrow points TO that direction)
+                            const getRotation = (text: string): number => {
+                              const t = text.toLowerCase();
+                              if (t.includes("utara") && t.includes("timur")) return 45;
+                              if (t.includes("utara") && t.includes("barat")) return 315;
+                              if (t.includes("selatan") && t.includes("timur") || t.includes("tenggara")) return 135;
+                              if (t.includes("selatan") && t.includes("barat") || t.includes("barat daya")) return 225;
+                              if (t.includes("timur") && t.includes("laut")) return 45;
+                              if (t.includes("barat") && t.includes("laut")) return 315;
+                              if (t.includes("utara")) return 0;
+                              if (t.includes("timur")) return 90;
+                              if (t.includes("selatan")) return 180;
+                              if (t.includes("barat")) return 270;
+                              return degrees; // fallback to actual degrees
+                            };
+
+                            const rotation = getRotation(dirText);
+
+                            return (
+                              <div className="flex flex-col items-center gap-1">
+                                <div className="text-sm font-bold text-gray-900 dark:text-white">{degrees}°</div>
+                                <div
+                                  className="w-5 h-5 flex items-center justify-center"
+                                  style={{ transform: `rotate(${rotation}deg)` }}
+                                >
+                                  <svg
+                                    className="w-4 h-4 text-blue-500"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
+                                  </svg>
+                                </div>
+                                <div className="text-xs text-yellow-500 dark:text-gray-400">{dirText}</div>
                               </div>
-                            </td>
-                            <td className="px-3 py-3 whitespace-nowrap text-center">
-                              <div className="flex items-baseline justify-center gap-1">
-                                <span className="text-sm font-bold text-gray-900 dark:text-white">{row.debit}</span>
-                                <span className="text-xs text-gray-500 dark:text-gray-400">m³/s</span>
-                              </div>
-                            </td>
-                            <td className="px-3 py-3 whitespace-nowrap text-center">
-                              <span className="text-sm font-medium text-gray-900 dark:text-white">{row.jam || "-"}</span>
-                            </td>
-                            <td className="px-3 py-3 whitespace-nowrap">
-                              <span
-                                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  row.status === "Normal" ? "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-400" : "bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-400"
-                                }`}>
-                                {row.status}
-                              </span>
-                            </td>
-                          </>
-                        )}
-                        {isPosCurahHujan && (
-                          <>
-                            <td className="px-3 py-3 whitespace-nowrap text-center">
-                              <div className="text-sm font-bold text-gray-900 dark:text-white">
-                                {row.jamTerakhir?.ch || "0"}
-                                <span className="text-xs font-normal text-gray-500 dark:text-gray-400 ml-0.5">mm</span>
-                              </div>
-                            </td>
-                            <td className="px-3 py-3 whitespace-nowrap text-center">
-                              <div className="text-sm font-bold text-gray-900 dark:text-white">
-                                {row.akumulasiHari?.ch || "0"}
-                                <span className="text-xs font-normal text-gray-500 dark:text-gray-400 ml-0.5">mm</span>
-                              </div>
-                            </td>
-                            <td className="px-3 py-3 whitespace-nowrap text-center">
-                              <div className="flex items-center justify-center gap-1">
-                                <div className={`w-2 h-2 rounded-full ${parseFloat(row.baterai || "0") >= 12.5 ? "bg-green-400" : parseFloat(row.baterai || "0") >= 12.0 ? "bg-yellow-400" : "bg-red-400"}`}></div>
-                                <span className="text-sm font-medium text-gray-900 dark:text-white">{row.baterai && row.baterai !== "0" ? `${row.baterai}V` : "N/A"}</span>
-                              </div>
-                            </td>
-                          </>
-                        )}
-                        {isPosKlimatologi && (
-                          <>
-                            <td className="px-3 py-3 whitespace-nowrap text-center">
-                              <div className="flex items-baseline justify-center gap-1">
-                                <span className="text-sm font-bold text-gray-900 dark:text-white">{row.jamTerakhir?.ch || "-"}</span>
-                                <span className="text-xs text-gray-500 dark:text-gray-400">°C</span>
-                              </div>
-                            </td>
-                            <td className="px-3 py-3 whitespace-nowrap text-center">
-                              <div className="flex items-baseline justify-center gap-1">
-                                <span className="text-sm font-bold text-gray-900 dark:text-white">{row.akumulasiHari?.ch || "-"}</span>
-                                <span className="text-xs text-gray-500 dark:text-gray-400">%</span>
-                              </div>
-                            </td>
-                            <td className="px-3 py-3 whitespace-nowrap text-center">
-                              <div className="flex items-baseline justify-center gap-1">
-                                <span className="text-sm font-bold text-gray-900 dark:text-white">{row.radiasi || "-"}</span>
-                                <span className="text-xs text-gray-500 dark:text-gray-400">MJ/m²</span>
-                              </div>
-                            </td>
-                            <td className="px-3 py-3 whitespace-nowrap text-center">
-                              <div className="space-y-1">
-                                <div className="text-sm font-bold text-gray-900 dark:text-white">{row.arahAngin || "-"}°</div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400">{row.kecepatanAngin ? `${row.kecepatanAngin} km/h` : "-"}</div>
-                              </div>
-                            </td>
-                            <td className="px-3 py-3 whitespace-nowrap text-center">
-                              <div className="flex items-center justify-center gap-1">
-                                <div className={`w-2 h-2 rounded-full ${parseFloat(row.baterai || "0") >= 12.5 ? "bg-green-400" : parseFloat(row.baterai || "0") >= 12.0 ? "bg-yellow-400" : "bg-red-400"}`}></div>
-                                <span className="text-sm font-medium text-gray-900 dark:text-white">{row.baterai && row.baterai !== "0" ? `${row.baterai}V` : "N/A"}</span>
-                              </div>
-                            </td>
-                          </>
-                        )}
+                            );
+                          })()}
+                        </td>
+                        {/* Kecepatan Angin */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center text-sm text-yellow-600 dark:text-gray-300 border border-[#FFD700] dark:border-gray-700">
+                          {row.kecepatanAngin || "-"}
+                        </td>
+                        {/* Tinggi Penguapan */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center text-sm text-yellow-600 dark:text-gray-300 border border-[#FFD700] dark:border-gray-700">
+                          {row.tinggiPenguapan || "-"}
+                        </td>
+                        {/* Baterai */}
+                        <td className="px-3 py-3 whitespace-nowrap text-center border border-[#FFD700] dark:border-gray-700">
+                          <div className="flex items-center justify-center gap-1">
+                            <div className={`w-2 h-2 rounded-full ${parseFloat(row.baterai || "0") >= 12.5 ? "bg-green-400" : parseFloat(row.baterai || "0") >= 12.0 ? "bg-yellow-400" : "bg-red-400"}`}></div>
+                            <span className="text-sm font-medium text-gray-900 dark:text-white">{row.baterai && row.baterai !== "0" ? `${row.baterai}V` : "N/A"}</span>
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -441,35 +456,35 @@ const TableCard = React.memo(
               </div>
             ) : (
               /* Regular Table for Other POS Types */
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-max">
-                  <thead className="bg-gray-50 dark:bg-gray-800/50">
+              <div className="overflow-x-auto rounded-lg border border-[#FFD700] dark:border-gray-700">
+                <table className="w-full min-w-max border-collapse">
+                  <thead className="bg-[#FFD700] dark:bg-yellow-900/50">
                     <tr>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-12">#</th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-56">Pos & ID</th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-32">Lokasi</th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-20">WS</th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-24">DAS</th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-20">Waktu</th>
+                      <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-left text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider w-12">#</th>
+                      <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-left text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider min-w-56">Pos & ID</th>
+                      <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-left text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider min-w-32">Lokasi</th>
+                      <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-left text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider min-w-20">WS</th>
+                      <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-left text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider min-w-24">DAS</th>
+                      <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-left text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider min-w-20">Waktu</th>
                       {isPosDugaAir && (
                         <>
-                          <th className="px-3 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-16">TMA</th>
-                          <th className="px-3 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-16">Debit</th>
-                          <th className="px-3 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-16">Jam</th>
-                          <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-16">Status</th>
+                          <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-center text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider min-w-16">TMA</th>
+                          <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-center text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider min-w-16">Debit</th>
+                          <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-center text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider min-w-16">Jam</th>
+                          <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-left text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider min-w-16">Status</th>
                         </>
                       )}
                       {isPosCurahHujan && (
                         <>
-                          <th className="px-3 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-20">
+                          <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-center text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider min-w-20">
                             <div>1 Jam Terakhir</div>
                             <div className="text-[8px] font-normal">CH (mm)</div>
                           </th>
-                          <th className="px-3 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-20">
+                          <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-center text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider min-w-20">
                             <div>Akumulasi 1 Hari</div>
                             <div className="text-[8px] font-normal">CH (mm)</div>
                           </th>
-                          <th className="px-3 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-16">
+                          <th className="px-3 py-3 border border-[#FFD700] dark:border-gray-700 text-center text-xs font-semibold text-black dark:text-gray-200 uppercase tracking-wider min-w-16">
                             <div>Baterai</div>
                             <div className="text-[8px] font-normal">(volt)</div>
                           </th>
@@ -477,11 +492,11 @@ const TableCard = React.memo(
                       )}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  <tbody className="divide-y divide-[#FFD700] dark:divide-gray-700">
                     {data.map((row, idx) => (
-                      <tr key={row.id} className="group hover:bg-blue-50/50 dark:hover:bg-blue-500/5 transition-colors cursor-pointer">
+                      <tr key={row.id} className="group hover:bg-[#FFD700]/20 dark:hover:bg-yellow-500/10 transition-colors cursor-pointer">
                         <td className="px-3 py-3 whitespace-nowrap">
-                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-700 text-xs font-medium text-gray-600 dark:text-gray-300">{(idx + 1).toString().padStart(2, "0")}</span>
+                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#FFD700] dark:bg-gray-700 text-xs font-medium text-black dark:text-gray-300">{(idx + 1).toString().padStart(2, "0")}</span>
                         </td>
                         <td className="px-3 py-3 min-w-56">
                           <div className="flex items-center gap-2">
@@ -494,20 +509,20 @@ const TableCard = React.memo(
                               <div className="text-sm font-semibold text-gray-900 dark:text-white" title={row.namaPos || row.location}>
                                 <div className="whitespace-normal wrap-break-word leading-tight">{row.namaPos || row.location}</div>
                               </div>
-                              <div className="text-xs text-gray-500 dark:text-gray-400 font-mono">{row.idLogger}</div>
+                              <div className="text-xs text-yellow-500 dark:text-gray-400 font-mono">{row.idLogger}</div>
                             </div>
                           </div>
                         </td>
                         <td className="px-3 py-3 text-sm text-gray-900 dark:text-white font-medium min-w-32" title={row.lokasi}>
                           <div className="whitespace-normal wrap-break-word leading-tight">{row.lokasi}</div>
                         </td>
-                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-300 min-w-20" title={row.ws}>
+                        <td className="px-3 py-3 text-sm text-yellow-600 dark:text-gray-300 min-w-20" title={row.ws}>
                           <div className="whitespace-normal wrap-break-word leading-tight">{row.ws}</div>
                         </td>
-                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-300 min-w-24" title={row.das}>
+                        <td className="px-3 py-3 text-sm text-yellow-600 dark:text-gray-300 min-w-24" title={row.das}>
                           <div className="whitespace-normal wrap-break-word leading-tight">{row.das}</div>
                         </td>
-                        <td className="px-3 py-3 whitespace-nowrap text-xs text-gray-600 dark:text-gray-300 min-w-16">
+                        <td className="px-3 py-3 whitespace-nowrap text-xs text-yellow-600 dark:text-gray-300 min-w-16">
                           <div>{row.tanggal}</div>
                           <div className="font-medium text-gray-900 dark:text-white">{row.jam}</div>
                         </td>
@@ -516,13 +531,13 @@ const TableCard = React.memo(
                             <td className="px-3 py-3 whitespace-nowrap text-center">
                               <div className="flex items-baseline justify-center gap-1">
                                 <span className="text-sm font-bold text-gray-900 dark:text-white">{row.tma}</span>
-                                <span className="text-xs text-gray-500 dark:text-gray-400">m</span>
+                                <span className="text-xs text-yellow-500 dark:text-gray-400">m</span>
                               </div>
                             </td>
                             <td className="px-3 py-3 whitespace-nowrap text-center">
                               <div className="flex items-baseline justify-center gap-1">
                                 <span className="text-sm font-bold text-gray-900 dark:text-white">{row.debit}</span>
-                                <span className="text-xs text-gray-500 dark:text-gray-400">m³/s</span>
+                                <span className="text-xs text-yellow-500 dark:text-gray-400">m³/s</span>
                               </div>
                             </td>
                             <td className="px-3 py-3 whitespace-nowrap text-center">
@@ -530,9 +545,8 @@ const TableCard = React.memo(
                             </td>
                             <td className="px-3 py-3 whitespace-nowrap">
                               <span
-                                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  row.status === "Normal" ? "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-400" : "bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-400"
-                                }`}>
+                                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${row.status === "Normal" ? "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-400" : "bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-400"
+                                  }`}>
                                 {row.status}
                               </span>
                             </td>
@@ -543,13 +557,13 @@ const TableCard = React.memo(
                             <td className="px-3 py-3 whitespace-nowrap text-center">
                               <div className="text-sm font-bold text-gray-900 dark:text-white">
                                 {row.jamTerakhir?.ch || "0"}
-                                <span className="text-xs font-normal text-gray-500 dark:text-gray-400 ml-0.5">mm</span>
+                                <span className="text-xs font-normal text-yellow-500 dark:text-gray-400 ml-0.5">mm</span>
                               </div>
                             </td>
                             <td className="px-3 py-3 whitespace-nowrap text-center">
                               <div className="text-sm font-bold text-gray-900 dark:text-white">
                                 {row.akumulasiHari?.ch || "0"}
-                                <span className="text-xs font-normal text-gray-500 dark:text-gray-400 ml-0.5">mm</span>
+                                <span className="text-xs font-normal text-yellow-500 dark:text-gray-400 ml-0.5">mm</span>
                               </div>
                             </td>
                             <td className="px-3 py-3 whitespace-nowrap text-center">
@@ -570,12 +584,12 @@ const TableCard = React.memo(
         )}
 
         {/* Footer */}
-        <div className="px-3 py-3 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700">
+        <div className="px-3 py-3 bg-[#FFD700]/10 dark:bg-gray-800/50 border-t border-[#FFD700] dark:border-gray-700">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="text-sm text-[#FFD700] dark:text-gray-400">
               Menampilkan {data.length} dari {data.length} lokasi
             </div>
-            <button className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors">
+            <button className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#FFD700] hover:text-yellow-800 dark:text-[#FFD700] dark:hover:text-yellow-300 hover:bg-[#FFD700]/20 dark:hover:bg-yellow-500/10 rounded-lg transition-colors">
               Lihat Semua
               <ArrowUpRight className="h-4 w-4" />
             </button>
@@ -718,7 +732,7 @@ export default function DataPage() {
               <input
                 type="text"
                 placeholder="Cari lokasi..."
-                className="pl-9 pr-4 py-2 rounded-full border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 w-full sm:w-64 shadow-sm placeholder:text-muted-foreground"
+                className="pl-9 pr-4 py-2 rounded-full border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50 w-full sm:w-64 shadow-sm placeholder:text-muted-foreground"
               />
             </div>
             <button className="p-2 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 shadow-sm hover:bg-gray-50 dark:hover:bg-white/10 transition-colors">
@@ -756,7 +770,7 @@ export default function DataPage() {
               }
             }}
             disabled={autoScraping}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded-xl text-sm font-medium transition-colors disabled:cursor-not-allowed">
+            className="flex items-center gap-2 px-4 py-2 bg-[#FFD700] hover:bg-yellow-400 disabled:bg-[#FFD700] text-black rounded-xl text-sm font-medium transition-colors disabled:cursor-not-allowed">
             <RefreshCw className={`h-4 w-4 ${autoScraping ? "animate-spin" : ""}`} />
             <span>{autoScraping ? "Mengambil Data..." : "Refresh Data"}</span>
           </button>

@@ -11,6 +11,7 @@
     --accent-blue: #4FC3F7;
     --text-muted: rgba(0, 0, 0, 0.6);
     --text-secondary: rgba(0, 0, 0, 0.4);
+    --pu-yellow: #FFD700;
   }
 
   .dark {
@@ -20,6 +21,7 @@
     --card-border: rgba(255, 255, 255, 0.08);
     --text-muted: rgba(255, 255, 255, 0.6);
     --text-secondary: rgba(255, 255, 255, 0.4);
+    --pu-yellow: #FFD700;
   }
 }
 
@@ -33,6 +35,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
+  --color-pu-yellow: var(--pu-yellow);
 }
 
 body {

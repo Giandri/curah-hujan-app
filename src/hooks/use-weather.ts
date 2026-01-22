@@ -192,10 +192,7 @@ export function useCurrentWeather(adm4: string, enabled: boolean = true): UseQue
   });
 }
 
-/**
- * Hook untuk mendapatkan weather data untuk multiple locations
- * Useful untuk dashboard yang menampilkan cuaca beberapa kota sekaligus
- */
+
 export function useMultipleLocationsWeather(adm4List: string[], enabled: boolean = true): UseQueryResult<Map<string, CurrentWeatherData["current"]>, Error> {
   return useQuery({
     queryKey: ["multiple-weather", ...adm4List.sort()],
@@ -234,7 +231,7 @@ export function useMultipleLocationsWeather(adm4List: string[], enabled: boolean
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
-    refetchInterval: 5 * 60 * 1000, // Refetch setiap 5 menit
+    refetchInterval: 5 * 60 * 1000,
     retry: 2,
   });
 }
@@ -268,5 +265,4 @@ export function usePrefetchWeather() {
   return { prefetchWeather };
 }
 
-// Re-export types untuk convenience
 export type { BMKGWeatherData } from "@/lib/bmkg-api";

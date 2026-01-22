@@ -44,7 +44,7 @@ interface ScraperData {
 
 // File rotation manager
 class FileRotationManager {
-  constructor(private dataDir: string, private filename: string) {}
+  constructor(private dataDir: string, private filename: string) { }
 
   private get filepath(): string {
     return path.join(this.dataDir, this.filename);
@@ -310,25 +310,59 @@ async function scrapePosKlimatologi(): Promise<{ success: boolean; records: numb
 
     await page.waitForSelector("#aws-table tbody tr", { timeout: SCRAPER_CONFIG.tableTimeout });
 
-    console.log(`[${timestampStr}] 📊 Extracting data...`);
+    console.log(`[${timestampStr}] 📊 Extracting POS KLIMATOLOGI data with explicit column mapping...`);
 
     const results = await page.evaluate(() => {
       const table = document.querySelector("#aws-table");
-      const headers: string[] = [];
-      const headerCells = table?.querySelectorAll("thead tr th, thead tr td");
-      headerCells?.forEach((cell) => headers.push(cell.textContent?.trim() || ""));
-
       const rows = table?.querySelectorAll("tbody tr");
       const data: any[] = [];
 
+      // Helper function to clean text (remove extra whitespace and newlines)
+      const cleanText = (text: string | null | undefined): string => {
+        return (text || "").replace(/\s+/g, " ").trim();
+      };
+
+      // Helper to extract numeric value from string like "99.9%Sangat Lembab"
+      const extractNumeric = (text: string): string => {
+        const match = text.match(/(\d+\.?\d*)/);
+        return match ? match[1] : text;
+      };
+
+      // Helper to extract status from kelembapan like "99.9%Sangat Lembab" -> "Sangat Lembab"
+      const extractStatus = (text: string): string => {
+        return text.replace(/[\d.%]+/g, "").trim();
+      };
+
+      // Explicit column mapping based on table structure:
+      // 0: No., 1: Nama Pos, 2: Tanggal, 3: Jam, 4: Kelembapan,
+      // 5: Curah Hujan Per 5 Menit, 6: Curah Hujan 1 Jam Terakhir, 7: Tekanan(MB),
+      // 8: Radiasi Matahari, 9: Lama Penyinaran, 10: Suhu(°C),
+      // 11: Arah Angin, 12: Kecepatan Angin(km/h), 13: Tinggi Penguapan(mm), 14: Baterai(Volt)
       rows?.forEach((row) => {
         const cols = row.querySelectorAll("td");
         if (cols.length > 0) {
-          const record: any = {};
-          cols.forEach((col, index) => {
-            const headerKey = headers[index] || `col_${index}`;
-            record[headerKey] = col.textContent?.trim() || "";
-          });
+          const kelembapanRaw = cols[4]?.textContent?.trim() || "";
+          const curahHujan1JamRaw = cols[6]?.textContent?.trim() || "";
+
+          const record: any = {
+            "No.": cols[0]?.textContent?.trim() || "",
+            "Nama Pos": cols[1]?.textContent?.trim() || "",
+            "Tanggal": cols[2]?.textContent?.trim() || "",
+            "Jam": cols[3]?.textContent?.trim() || "",
+            "Kelembapan": extractNumeric(kelembapanRaw),
+            "Kelembapan Status": extractStatus(kelembapanRaw),
+            "Curah Hujan Per 5 Menit": cols[5]?.textContent?.trim() || "",
+            "Curah Hujan 1 Jam Terakhir": extractNumeric(curahHujan1JamRaw.replace(/mm/gi, "")),
+            "Curah Hujan Status": extractStatus(curahHujan1JamRaw.replace(/[\d.]+\s*mm/gi, "")),
+            "Tekanan(MB)": cols[7]?.textContent?.trim() || "",
+            "Radiasi Matahari": cols[8]?.textContent?.trim() || "",
+            "Lama Penyinaran": cols[9]?.textContent?.trim() || "",
+            "Suhu(°C)": cols[10]?.textContent?.trim() || "",
+            "Arah Angin": cleanText(cols[11]?.textContent), // Clean newlines
+            "Kecepatan Angin(km/h)": cols[12]?.textContent?.trim() || "",
+            "Tinggi Penguapan(mm)": cols[13]?.textContent?.trim() || "",
+            "Baterai(Volt)": cols[14]?.textContent?.trim() || "",
+          };
           data.push(record);
         }
       });

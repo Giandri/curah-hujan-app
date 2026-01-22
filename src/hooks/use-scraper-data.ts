@@ -184,34 +184,38 @@ export function formatPosCurahHujanData(rawData: any[]): any[] {
 
 // Utility function untuk format data POS Klimatologi
 export function formatPosKlimatologiData(rawData: any[]): any[] {
-  return rawData.map((item, index) => ({
-    id: index + 1,
-    namaPos: item["NAMA POS"] || item["Nama Pos"] || "Unknown",
-    idLogger: item["ID LOGGER"] || item["Id Logger"] || "",
-    lokasi: item["LOKASI"] || item["Lokasi"] || "",
-    ws: item["WS"] || item["Wilayah Sungai"] || "",
-    das: item["DAS"] || item["Daerah Aliran Sungai"] || "",
-    tanggal: item["TANGGAL"] || item["Tanggal"] || "",
-    jam: item["JAM"] || item["Jam"] || "",
-    jamTerakhir: {
-      ch: item["Suhu(°C)"] || item["SUHU"] || item["Suhu"] || "",
-      intensitas: "°C",
-    },
-    akumulasiHari: {
-      ch: (() => {
-        // Extract only numeric part from "99.9%Sangat Lembab"
-        const kelembapan = item["Kelembapan"] || item["KELEMBAPAN"] || "";
-        const numericMatch = kelembapan.toString().match(/(\d+\.?\d*)/);
-        return numericMatch ? numericMatch[1] : kelembapan;
-      })(),
-      intensitas: "%",
-    },
-    radiasi: item["Radiasi Matahari"] || item["RADIASI MATAHARI"] || "",
-    arahAngin: item["Arah Angin"] || item["ARAH ANGIN"] || "",
-    kecepatanAngin: item["Kecepatan Angin(km/h)"] || item["KECEPATAN ANGIN"] || "",
-    tekananUdara: item["Tekanan(MB)"] || item["TEKANAN(MB)"] || "",
-    curahHujan: item["Curah Hujan"] || item["CURAH HUJAN"] || "",
-    tinggiPenguapan: item["Tinggi Penguapan(mm)"] || item["TINGGI PENGUAPAN"] || "",
-    baterai: item["Baterai(Volt)"] || item["BATERAI(VOLT)"] || "",
-  }));
+  return rawData.map((item, index) => {
+    // Scraper now provides pre-parsed fields
+    return {
+      id: index + 1,
+      namaPos: item["Nama Pos"] || "Unknown",
+      tanggal: item["Tanggal"] || "",
+      jam: item["Jam"] || "",
+      kelembapan: item["Kelembapan"] || "",
+      kelembapanStatus: item["Kelembapan Status"] || "",
+      curahHujanPer5Menit: item["Curah Hujan Per 5 Menit"] || "",
+      curahHujan1JamTerakhir: item["Curah Hujan 1 Jam Terakhir"] || "",
+      curahHujanStatus: item["Curah Hujan Status"] || "",
+      tekanan: item["Tekanan(MB)"] || "",
+      radiasiMatahari: item["Radiasi Matahari"] || "",
+      lamaPenyinaran: item["Lama Penyinaran"] || "",
+      suhu: item["Suhu(°C)"] || "",
+      arahAngin: item["Arah Angin"] || "",
+      kecepatanAngin: item["Kecepatan Angin(km/h)"] || "",
+      tinggiPenguapan: item["Tinggi Penguapan(mm)"] || "",
+      baterai: item["Baterai(Volt)"] || "",
+      // Legacy field mappings for compatibility with existing UI
+      jamTerakhir: {
+        ch: item["Suhu(°C)"] || "",
+        intensitas: "°C",
+      },
+      akumulasiHari: {
+        ch: item["Kelembapan"] || "",
+        intensitas: "%",
+      },
+      radiasi: item["Radiasi Matahari"] || "",
+    };
+  });
 }
+
+

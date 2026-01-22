@@ -156,8 +156,48 @@ export default function Home() {
           </motion.div>
         </motion.div>
 
-        {/* Maps */}
-        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4, duration: 0.5 }}>
+        {/* Maps with Progressive Blur */}
+        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4, duration: 0.5 }} className="relative">
+          {/* Progressive Blur Overlays - Fixed Full */}
+          <div className="absolute inset-0 pointer-events-none z-10">
+            <div
+              className="absolute top-0 left-0 right-0 h-16"
+              style={{
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                maskImage: 'linear-gradient(to bottom, black, transparent)',
+                WebkitMaskImage: 'linear-gradient(to bottom, black, transparent)',
+              }}
+            />
+            <div
+              className="absolute bottom-0 left-0 right-0 h-16"
+              style={{
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                maskImage: 'linear-gradient(to top, black, transparent)',
+                WebkitMaskImage: 'linear-gradient(to top, black, transparent)',
+              }}
+            />
+            <div
+              className="absolute left-0 top-0 bottom-0 w-12"
+              style={{
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                maskImage: 'linear-gradient(to right, black, transparent)',
+                WebkitMaskImage: 'linear-gradient(to right, black, transparent)',
+              }}
+            />
+            <div
+              className="absolute right-0 top-0 bottom-0 w-12"
+              style={{
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                maskImage: 'linear-gradient(to left, black, transparent)',
+                WebkitMaskImage: 'linear-gradient(to left, black, transparent)',
+              }}
+            />
+          </div>
+
           <Maps
             onLocationSelect={(location) => {
               setSelectedLocation({ name: location.name, adm4: location.adm4 });

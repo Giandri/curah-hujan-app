@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-01-19T04:00:00.020Z",
+  "timestamp": "2026-01-20T03:44:53.725Z",
   "total_records": 8,
   "source_url": "https://hkababel.higertech.com/Home/TabelMonitoring",
-  "last_updated": "2026-01-19T04:00:00.020Z",
+  "last_updated": "2026-01-20T03:44:53.725Z",
   "data": [
     {
       "NO.": "1",
@@ -24,11 +24,11 @@
       "LOKASI": "Kab. Bangka Selatan, Kec. Toboali, Rias",
       "WS": "Bangka",
       "DAS": "Das Bikang",
-      "TANGGAL": "19 Januari 2026",
-      "JAM (WIB)": "10:55",
-      "TMA": "3.4 m",
+      "TANGGAL": "20 Januari 2026",
+      "JAM (WIB)": "10:40",
+      "TMA": "3.39 m",
       "DEBIT (m3/s)": "-",
-      "BATERAI (volt)": "13.08"
+      "BATERAI (volt)": "13.07"
     },
     {
       "NO.": "3",
@@ -37,11 +37,11 @@
       "LOKASI": "Kab. Bangka, Kec. Mendo Barat, Kace Timur",
       "WS": "Bangka",
       "DAS": "-",
-      "TANGGAL": "19 Januari 2026",
-      "JAM (WIB)": "10:55",
-      "TMA": "0.63 m",
+      "TANGGAL": "20 Januari 2026",
+      "JAM (WIB)": "10:40",
+      "TMA": "0.57 m",
       "DEBIT (m3/s)": "-",
-      "BATERAI (volt)": "14.58"
+      "BATERAI (volt)": "14.71"
     },
     {
       "NO.": "4",
@@ -63,11 +63,11 @@
       "LOKASI": "Kab. Bangka Tengah, Kec. Sungai Selan, Lampur",
       "WS": "Bangka",
       "DAS": "Das Selan",
-      "TANGGAL": "19 Januari 2026",
-      "JAM (WIB)": "10:55",
-      "TMA": "0.43 m",
+      "TANGGAL": "20 Januari 2026",
+      "JAM (WIB)": "10:40",
+      "TMA": "0.42 m",
       "DEBIT (m3/s)": "-",
-      "BATERAI (volt)": "13.42"
+      "BATERAI (volt)": "13.5"
     },
     {
       "NO.": "6",
